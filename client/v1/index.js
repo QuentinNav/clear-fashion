@@ -267,10 +267,7 @@ const COTELE_PARIS = [
 
 function check_New(date){
     var currentTime= new Date(Date.now());
-    console.log(currentTime)
     date.setDate(date.getDate()+14)
-    //var date_2weeks = new Date(date + 12096e5)
-    console.log(date)
     return date>currentTime
 }
 
@@ -285,6 +282,19 @@ console.log("New product in coteleparis : ", new_product)
 // 🎯 TODO: Reasonable price
 // // 1. Log if coteleparis is a reasonable price shop (true or false)
 // // A reasonable price if all the products are less than 100€
+
+function check_reasonable_price(list_products){
+    var reasonable_price =true;
+    for(let i = 0  ;i < list_products.length ; i++)
+    {
+        if(list_products[i].price>100){
+            reasonable_price=false;
+        }
+    }
+    return reasonable_price
+}
+
+console.log("CoteleParis is a reasonable price shop : ", check_reasonable_price(COTELE_PARIS));
 
 
 // 🎯 TODO: Find a specific product
