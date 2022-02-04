@@ -301,6 +301,19 @@ console.log("CoteleParis is a reasonable price shop : ", check_reasonable_price(
 // 1. Find the product with the uuid `b56c6d88-749a-5b4c-b571-e5b5c6483131`
 // 2. Log the product
 
+function find_Product(id, list_products){
+    var product = list_products[0];
+
+    for(let i=0; i<list_products.length; i++){
+        if(list_products[i].uuid==id )
+        {
+            product = list_products[i]
+            return product
+        }
+    }
+}
+
+console.log("The product with the uuid b56c6d88-749a-5b4c-b571-e5b5c6483131 is :  ", find_Product("b56c6d88-749a-5b4c-b571-e5b5c6483131",COTELE_PARIS));
 
 // 🎯 TODO: Delete a specific product
 // 1. Delete the product with the uuid `b56c6d88-749a-5b4c-b571-e5b5c6483131`
@@ -313,7 +326,7 @@ let blueJacket = {
   'uuid': 'b4b05398-fee0-4b31-90fe-a794d2ccfaaa'
 };
 
-// we make a copy of blueJacket to jacket
+// we make a copy of blueJacket to jackete
 // and set a new property `favorite` to true
 let jacket = blueJacket;
 
