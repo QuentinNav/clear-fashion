@@ -12,6 +12,7 @@ const selectPage = document.querySelector('#page-select');
 const selectBrand = document.querySelector('#brand-select');
 const selectRecentlyReleased= document.querySelector('#recently-released');
 const selectReasonablePrice=document.querySelector('#reasonable-price');
+const selectSort = document.querySelector('#sort-select');
 
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
@@ -164,6 +165,7 @@ selectBrand.addEventListener('change',async(event)=>{
 
 
 
+
 document.addEventListener('DOMContentLoaded', async () => {
   const products = await fetchProducts();
 
@@ -188,6 +190,34 @@ selectReasonablePrice.addEventListener("click",async()=>{
     render(products, currentPagination);
 })
 
+selectSort.addEventListener('change',async(event)=>{
+
+    var products =[]
+
+    switch(event.target.value)
+    {
+        case "price-asc":
+
+            products =currentProducts.sort(function(a,b){return a.price -b.price});
+            break;
+        case "price-desc":
+            products =currentProducts.sort(function(a,b){return b.price -a.price});
+            break;
+        case "date-asc":
+
+            break;
+        case "date-desc":
+            break;
+        default :
+            products = await fetchProducts();
+            setCurrentProducts(products);
+
+
+
+    }
+    render(currentProducts, currentPagination);
+});
+
 function reasonable_price(products){
     return products.filter(product=>(product.price<50));
 }
@@ -199,7 +229,6 @@ function recently_released(products){
 function check_New(date){
     var currentTime= new Date(Date.now());
     date.setDate(date.getDate()+14)
-    console.log(date>currentTime)
     return date>currentTime
 }
 
