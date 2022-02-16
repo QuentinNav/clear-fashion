@@ -5,11 +5,16 @@
 let currentProducts = [];
 let currentPagination = {};
 
+
 // instantiate the selectors
 const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
+const selectBrand = document.querySelector('#brand-select');
+
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
+
+
 
 /**
  * Set global value
@@ -20,6 +25,9 @@ const setCurrentProducts = ({result, meta}) => {
   currentProducts = result;
   currentPagination = meta;
 };
+
+
+
 
 /**
  * Fetch products from api
@@ -81,7 +89,6 @@ const renderPagination = pagination => {
     {'length': pageCount},
     (value, index) => `<option value="${index + 1}">${index + 1}</option>`
   ).join('');
-
   selectPage.innerHTML = options;
   selectPage.selectedIndex = currentPage - 1;
 };
@@ -96,10 +103,20 @@ const renderIndicators = pagination => {
   spanNbProducts.innerHTML = count;
 };
 
+const renderBrands = brand_names =>{
+    var template =[];
+    for(let i=0; i<brand_names.length;i++){
+        template[i]=`<option value="${brand_names[i]}">${brand_names[i]}</option>`
+    };
+    template=template.join('');
+    selectBrand.innerHTML = template;
+}
+
 const render = (products, pagination) => {
   renderProducts(products);
   renderPagination(pagination);
   renderIndicators(pagination);
+
 };
 
 /**
@@ -111,14 +128,64 @@ const render = (products, pagination) => {
  */
 selectShow.addEventListener('change', async (event) => {
   const products = await fetchProducts(currentPagination.currentPage, parseInt(event.target.value));
-
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });
+
+
+/**
+*Select the number of the page to display
+*/
+selectPage.addEventListener('change',async (event) =>{
+    const pagination =await fetchProducts(parseInt(event.target.value), currentProducts.products);
+
+    setCurrentProducts(pagination);
+    render(currentProducts,currentPagination);
+});
+
+
+selectBrand.addEventListener('change',async(event)=>{
+    if(event.target.value=="-"){
+        const products = await fetchProducts();
+        setCurrentProducts(products);
+        render(currentProducts, currentPagination);
+    }
+    else{
+        var products_brand = await fetchProducts(1,999);
+        const brands_dict =dict_by_brand(products_brand.result, event.target.value);
+        products_brand.result=brands_dict;
+        setCurrentProducts(products_brand,1);
+        render(currentProducts,currentPagination);
+    }
+
+});
+
 
 document.addEventListener('DOMContentLoaded', async () => {
   const products = await fetchProducts();
 
+  const products_max= await fetchProducts(1,999);
+
+  const brand_names= brand_names_extract(products_max.result)
+  brand_names.unshift("-");
+  renderBrands(brand_names);
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });
+
+
+
+
+function dict_by_brand(products,brand_name){
+    return products.filter(product =>(product.brand===brand_name));
+}
+
+function brand_names_extract(data){
+    let brand_names= [];
+    for (let i=0; i<data.length; i++){
+        if(brand_names.includes(data[i].brand)==false){
+            brand_names.push(data[i].brand);
+        }
+    };
+    return brand_names
+}
