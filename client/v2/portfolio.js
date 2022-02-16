@@ -11,6 +11,7 @@ const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
 const selectBrand = document.querySelector('#brand-select');
 const selectRecentlyReleased= document.querySelector('#recently-released');
+const selectReasonablePrice=document.querySelector('#reasonable-price');
 
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
@@ -178,16 +179,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 selectRecentlyReleased.addEventListener("click",async() =>{
     var products =currentProducts;
     products= recently_released(products);
-    console.log(products)
     render(products,currentPagination);
-
-
 })
 
+selectReasonablePrice.addEventListener("click",async()=>{
+    var products = currentProducts;
+    products=reasonable_price(products);
+    render(products, currentPagination);
+})
 
+function reasonable_price(products){
+    return products.filter(product=>(product.price<50));
+}
 
 function recently_released(products){
-
     return products.filter(product=>(check_New(new Date(product.released))));
 }
 
