@@ -168,7 +168,7 @@ selectBrand.addEventListener('change',async(event)=>{
 
 document.addEventListener('DOMContentLoaded', async () => {
   const products = await fetchProducts();
-
+  console.log(products)
   const products_max= await fetchProducts(1,999);
 
   const brand_names= brand_names_extract(products_max.result)
@@ -204,9 +204,10 @@ selectSort.addEventListener('change',async(event)=>{
             products =currentProducts.sort(function(a,b){return b.price -a.price});
             break;
         case "date-asc":
-
+            products=currentProducts.sort(sort_date_asc);
             break;
         case "date-desc":
+            products=currentProducts.sort(sort_date_desc);
             break;
         default :
             products = await fetchProducts();
@@ -217,6 +218,15 @@ selectSort.addEventListener('change',async(event)=>{
     }
     render(currentProducts, currentPagination);
 });
+
+function sort_date_desc(a, b){
+    return new Date(a.released).getTime() - new Date(b.released).getTime();
+}
+
+function sort_date_asc(a,b){
+    return new Date(b.released).getTime() - new Date(a.released).getTime();
+}
+
 
 function reasonable_price(products){
     return products.filter(product=>(product.price<50));
