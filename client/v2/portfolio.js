@@ -10,6 +10,7 @@ let currentPagination = {};
 const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
 const selectBrand = document.querySelector('#brand-select');
+const selectRecentlyReleased= document.querySelector('#recently-released');
 
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
@@ -161,6 +162,7 @@ selectBrand.addEventListener('change',async(event)=>{
 });
 
 
+
 document.addEventListener('DOMContentLoaded', async () => {
   const products = await fetchProducts();
 
@@ -173,7 +175,28 @@ document.addEventListener('DOMContentLoaded', async () => {
   render(currentProducts, currentPagination);
 });
 
+selectRecentlyReleased.addEventListener("click",async() =>{
+    var products =currentProducts;
+    products= recently_released(products);
+    console.log(products)
+    render(products,currentPagination);
 
+
+})
+
+
+
+function recently_released(products){
+
+    return products.filter(product=>(check_New(new Date(product.released))));
+}
+
+function check_New(date){
+    var currentTime= new Date(Date.now());
+    date.setDate(date.getDate()+14)
+    console.log(date>currentTime)
+    return date>currentTime
+}
 
 
 function dict_by_brand(products,brand_name){
