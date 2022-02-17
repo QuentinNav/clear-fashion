@@ -14,6 +14,7 @@ const selectRecentlyReleased= document.querySelector('#recently-released');
 const selectReasonablePrice=document.querySelector('#reasonable-price');
 const selectSort = document.querySelector('#sort-select');
 const selectNbProduct = document.querySelector('#nbProducts');
+const selectNbNewProducts = document.querySelector('#nbNewProducts');
 
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
@@ -171,8 +172,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const products = await fetchProducts();
   const products_max= await fetchProducts(1,999);
 
-  const nbProducts = products_max.length;
-  selectNbProduct.innerHTML = nbProducts;
+  selectNbProduct.innerHTML = products_max.result.length;
+
+  selectNbNewProducts.innerHTML=recently_released(products_max.result).length
 
   const brand_names= brand_names_extract(products_max.result)
   brand_names.unshift("-");
@@ -235,8 +237,8 @@ function reasonable_price(products){
     return products.filter(product=>(product.price<50));
 }
 
-function recently_released(products){
-    return products.filter(product=>(check_New(new Date(product.released))));
+function recently_released(list_products){
+    return list_products.filter(product=>(check_New(new Date(product.released))));
 }
 
 function check_New(date){
