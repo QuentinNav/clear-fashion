@@ -15,6 +15,9 @@ const selectReasonablePrice=document.querySelector('#reasonable-price');
 const selectSort = document.querySelector('#sort-select');
 const selectNbProduct = document.querySelector('#nbProducts');
 const selectNbNewProducts = document.querySelector('#nbNewProducts');
+const selectP50 =document.querySelector('#p50');
+const selectP90 =document.querySelector('#p90');
+const selectP95 =document.querySelector('#p95');
 
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
@@ -174,7 +177,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   selectNbProduct.innerHTML = products_max.result.length;
 
-  selectNbNewProducts.innerHTML=recently_released(products_max.result).length
+  selectNbNewProducts.innerHTML=recently_released(products_max.result).length;
+  selectP50.innerHTML=String(pPriceValue(products_max.result,50)) + " €";
+  selectP90.innerHTML=String(pPriceValue(products_max.result,90)) + " €";
+  selectP95.innerHTML=String(pPriceValue(products_max.result,95)) + " €";
+
 
   const brand_names= brand_names_extract(products_max.result)
   brand_names.unshift("-");
@@ -202,7 +209,6 @@ selectSort.addEventListener('change',async(event)=>{
     switch(event.target.value)
     {
         case "price-asc":
-
             products =currentProducts.sort(function(a,b){return a.price -b.price});
             break;
         case "price-desc":
@@ -223,6 +229,12 @@ selectSort.addEventListener('change',async(event)=>{
     }
     render(currentProducts, currentPagination);
 });
+
+function pPriceValue(list_products, number){
+    var sorted_list_products = list_products.sort(function(a,b){return a.price -b.price});
+    return sorted_list_products[Math.trunc((sorted_list_products.length)*(1-number*0.01))].price;
+
+}
 
 function sort_date_desc(a, b){
     return new Date(a.released).getTime() - new Date(b.released).getTime();
