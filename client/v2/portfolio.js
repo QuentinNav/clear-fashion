@@ -18,6 +18,7 @@ const selectNbNewProducts = document.querySelector('#nbNewProducts');
 const selectP50 =document.querySelector('#p50');
 const selectP90 =document.querySelector('#p90');
 const selectP95 =document.querySelector('#p95');
+const selectLastReleasedDate=  document.querySelector('#lastReleasedDate')
 
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
@@ -181,6 +182,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   selectP50.innerHTML=String(pPriceValue(products_max.result,50)) + " €";
   selectP90.innerHTML=String(pPriceValue(products_max.result,90)) + " €";
   selectP95.innerHTML=String(pPriceValue(products_max.result,95)) + " €";
+  selectLastReleasedDate.innerHTML= products_max.result.sort(sort_date_asc)[0].released;
 
 
   const brand_names= brand_names_extract(products_max.result)
