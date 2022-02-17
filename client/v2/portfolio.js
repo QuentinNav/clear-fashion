@@ -13,6 +13,7 @@ const selectBrand = document.querySelector('#brand-select');
 const selectRecentlyReleased= document.querySelector('#recently-released');
 const selectReasonablePrice=document.querySelector('#reasonable-price');
 const selectSort = document.querySelector('#sort-select');
+const selectNbProduct = document.querySelector('#nbProducts');
 
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
@@ -168,8 +169,10 @@ selectBrand.addEventListener('change',async(event)=>{
 
 document.addEventListener('DOMContentLoaded', async () => {
   const products = await fetchProducts();
-  console.log(products)
   const products_max= await fetchProducts(1,999);
+
+  const nbProducts = products_max.length;
+  selectNbProduct.innerHTML = nbProducts;
 
   const brand_names= brand_names_extract(products_max.result)
   brand_names.unshift("-");
