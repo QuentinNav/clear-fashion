@@ -21,6 +21,7 @@ const selectP90 =document.querySelector('#p90');
 const selectP95 =document.querySelector('#p95');
 const selectLastReleasedDate=  document.querySelector('#lastReleasedDate');
 const selectFavoriteButton= document.querySelector('.favorite');
+const selectFavoritesFilter=document.querySelector("#favorites");
 
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
@@ -244,6 +245,12 @@ selectReasonablePrice.addEventListener("click",async()=>{
     render(products, currentPagination);
 })
 
+selectFavoritesFilter.addEventListener("click",async()=>{
+    var products=currentProducts;
+    products=favorite_filter(products);
+    render(products,currentPagination);
+})
+
 selectSort.addEventListener('change',async(event)=>{
 
     var products =[]
@@ -285,6 +292,9 @@ function sort_date_asc(a,b){
     return new Date(b.released).getTime() - new Date(a.released).getTime();
 }
 
+function favorite_filter(products){
+    return products.filter(product=>(favorites.includes("uuid"+product.uuid)));
+}
 
 function reasonable_price(products){
     return products.filter(product=>(product.price<50));
