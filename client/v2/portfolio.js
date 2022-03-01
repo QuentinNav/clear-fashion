@@ -4,6 +4,7 @@
 // current products on the page
 let currentProducts = [];
 let currentPagination = {};
+let favorites =[];
 
 
 // instantiate the selectors
@@ -18,12 +19,19 @@ const selectNbNewProducts = document.querySelector('#nbNewProducts');
 const selectP50 =document.querySelector('#p50');
 const selectP90 =document.querySelector('#p90');
 const selectP95 =document.querySelector('#p95');
-const selectLastReleasedDate=  document.querySelector('#lastReleasedDate')
+const selectLastReleasedDate=  document.querySelector('#lastReleasedDate');
+const selectFavoriteButton= document.querySelector('.favorite');
 
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
 
+/**
+const test = document.querySelector('#test084a85edbb995cb89170d032480455bf');
 
+test.addEventListener("mouseover",async (event) => {
+  console.log("test");
+});
+*/
 
 /**
  * Set global value
@@ -72,15 +80,29 @@ const renderProducts = products => {
   const div = document.createElement('div');
   const template = products
     .map(product => {
-      return `
-      <div class="product" id=${product.uuid}>
-        <span>${product.brand}</span>
-        <a href="${product.link}" target="_blank">${product.name}</a>
-        <span>${product.price}</span>
-      </div>
-    `;
+        var str= ""
+        if(favorites.includes(product.uuid))
+        {
+            str=`<div class="product" id="${product.uuid}">
+                 <button class="favorite" id="uuid${product.uuid}" type="button" value="uuid${product.uuid}">remove from favorites</button>
+                 <span>${product.brand}</span>
+                 <a href="${product.link}" target="_blank">${product.name}</a>
+                 <span>${product.price}</span>
+                 </div>`;
+        }
+        else{
+            str=`<div class="product" id="${product.uuid}">
+                 <button class="favorite" id="uuid${product.uuid}" type="button" value="uuid${product.uuid}">add to favorites</button>
+                 <span>${product.brand}</span>
+                 <a href="${product.link}" target="_blank">${product.name}</a>
+                 <span>${product.price}</span>
+                 </div>`;
+        }
+      console.log(str);
+      return str;
     })
     .join('');
+
 
   div.innerHTML = template;
   fragment.appendChild(div);
@@ -190,7 +212,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderBrands(brand_names);
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
+
+  const selectFavoriteButton= document.querySelectorAll('.favorite');
+  selectFavoriteButton.forEach(item => {
+      item.addEventListener('click', async(event)=>{
+          if(favorites.includes(event.target.value)){
+              favorites.splice(favorites.indexOf(event.target.value),1);
+              document.querySelector("#"+event.target.value).innerHTML="add to favorites";
+          }else{
+              favorites.push(event.target.value);
+              document.querySelector("#"+event.target.value).innerHTML="remove from favorites";
+          }
+      })
+  })
+
+
+
 });
+
+
 
 selectRecentlyReleased.addEventListener("click",async() =>{
     var products =currentProducts;
@@ -225,12 +265,11 @@ selectSort.addEventListener('change',async(event)=>{
         default :
             products = await fetchProducts();
             setCurrentProducts(products);
-
-
-
     }
     render(currentProducts, currentPagination);
 });
+
+
 
 function pPriceValue(list_products, number){
     var sorted_list_products = list_products.sort(function(a,b){return a.price -b.price});
