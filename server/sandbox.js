@@ -1,13 +1,44 @@
 /* eslint-disable no-console, no-process-exit */
 const dedicatedbrand = require('./sources/dedicatedbrand');
+const montlimartbrand = require('./sources/montlimart');
+const adressebrand=require('./sources/adresse_paris');
+const { v4: uuidv4 } = require('uuid');
 
-async function sandbox (eshop = 'https://www.dedicatedbrand.com/en/men/news') {
+
+
+
+ function saveToFile(products){
+    const fs=require('fs');
+    const jsonContent=JSON.stringify(products);
+    console.log(jsonContent);
+
+    fs.writeFileSync("./scraped_products.json",jsonContent,function(err, result) {
+     if(err) console.log('error', err);
+   });
+}
+
+function add_uuid(products){
+    for(let i=0;i<products.length;i++){
+        try{
+            products[i]["uuid"]=uuidv4();
+        }catch (e) {
+          console.error(e);
+        }
+
+    }
+    return products
+}
+
+
+async function sandbox () {
+  var products=[];
   try {
-    console.log(`🕵️‍♀️  browsing ${eshop} source`);
+    products = products.concat(await dedicatedbrand.scrape("https://www.dedicatedbrand.com"));
+    products = products.concat(await montlimartbrand.scrape("https://www.montlimart.com"));
+    products = products.concat(await adressebrand.scrape("https://adresse.paris"));
 
-    const products = await dedicatedbrand.scrape(eshop);
 
-    console.log(products);
+    saveToFile(add_uuid(products));
     console.log('done');
     process.exit(0);
   } catch (e) {
@@ -18,4 +49,4 @@ async function sandbox (eshop = 'https://www.dedicatedbrand.com/en/men/news') {
 
 const [,, eshop] = process.argv;
 
-sandbox(eshop);
+sandbox();
