@@ -1,8 +1,8 @@
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
-const url_home="https://adresse.paris";
+const url_home="https://adresse.paris/630-toute-la-collection";
+const {'v5': uuidv5} = require('uuid');
 
-const categories =["/630-toute-la-collection"]
 
 /**
  * Parse webpage e-shop
@@ -12,24 +12,26 @@ const categories =["/630-toute-la-collection"]
 const parse = data => {
   const $ = cheerio.load(data);
 
-  return $('.product_list grid row')
+  return $('.product_list.grid .ajax_block_product')
     .map((i, element) => {
       const name = $(element)
         .find('.product-name')
         .text()
         .trim()
-        .replace(/\s/g, ' ');
+        .replace(/\s/g, ' ').split("    ")[0];
       const price = parseInt(
         $(element)
           .find('.product-price')
           .text()
       );
-
+      const photo=$(element)
+        .find('.product_img_link img')
+        .attr('data-original');
       const link=url_home+ $(element)
         .find('.produc-name').attr('href');
 
-      console.log({'brand':'adresse',name, price, link});
-      return {'brand':'adresse',name, price, link};
+
+      return {'brand':'adresse',name, price, link,photo, '_id': uuidv5(link, uuidv5.URL)};
     })
     .get();
 };
@@ -40,26 +42,22 @@ const parse = data => {
  * @return {Array|null}
  */
  module.exports.scrape = async url => {
-   var products = [];
-   try{
-       for(let i =0; i<categories.length; i++){
+     try {
 
-             const response = await fetch(url+categories[i]);
+       const response = await fetch(url_home);
 
-             if (response.ok) {
-               const body = await response.text();
-               products = products.concat(parse(body));
-             }
+       if (response.ok) {
 
-     }
-     if (products.length>0)
-     {return products;}
+         const body = await response.text();
 
-     console.error(response);
-         return null;
-
-     } catch (error) {
-         console.error(error);
-         return null;
+         return parse(body);
        }
- };
+
+       console.error(response);
+
+       return null;
+     } catch (error) {
+       console.error(error);
+       return null;
+     }
+   };

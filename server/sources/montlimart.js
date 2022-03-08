@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const url_home="https://www.montlimart.com/";
 const categories =["/chaussures.html","/pulls-sweats.html","/chemises.html","/polos-t-shirts.html","/pantalons-jeans.html","/accessoires.html"];
+const {'v5': uuidv5} = require('uuid');
 
 /**
  * Parse webpage e-shop
@@ -23,10 +24,13 @@ const parse = data => {
         $(element)
           .find('.price')
           .text());
-
+      const photo=$(element).find('.product-image img').attr('src');
 
       const link=$(element).find('a').attr('href');
-      return {'brand':'montlimart',name, price, link};
+      if(typeof link !="undefined"){
+          const _id= uuidv5(link, uuidv5.URL)
+          return {'brand':'montlimart',name, price, link, _id, photo};
+      }
     })
     .get();
 };
