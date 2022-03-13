@@ -18,17 +18,7 @@ const { v4: uuidv4 } = require('uuid');
    });
 }
 
-function add_uuid(products){
-    for(let i=0;i<products.length;i++){
-        try{
-            products[i]["uuid"]=uuidv4();
-        }catch (e) {
-          console.error(e);
-        }
 
-    }
-    return products
-}
 
 
 async function sandbox () {
