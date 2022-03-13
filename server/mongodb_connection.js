@@ -25,5 +25,56 @@ async function insert_in_db(name,object){
     console.log(result)
 }
 
+async function ex_query(name_collection,query){
+    const db = await Connect_db()
+    const collection = db.collection(name_collection);
 
-insert_in_db("products",products)
+    collection.find(query).toArray(function(err,result){
+	if(err) throw err;
+     console.log(result)
+    });
+}
+
+async function find_product_by_brand(brand){
+    const query ={"brand":brand}
+    ex_query("products",query)
+}
+
+async function find_product_lte(price){
+    const query = {"price": {"$lte":price}}
+    ex_query("products",query)
+}
+
+async function find_product_sorted_by_price(){
+    const db = await Connect_db()
+    const collection = db.collection("products");
+
+    collection.aggregate([{"$sort":{"price":1}}]).toArray(function(err,result){
+	if(err) throw err;
+     console.log(result)
+    });
+}
+
+async function find_product_sorted_by_date(){
+    const db = await Connect_db()
+    const collection = db.collection("products");
+
+    collection.aggregate([{"$sort":{"date":-1}}]).toArray(function(err,result){
+	if(err) throw err;
+     console.log(result)
+    });
+}
+
+async function find_product_lt_2_weeks(){
+    const query={ date: { $gt: new Date(Date.now()-12096e5).toISOString()}}
+    ex_query("products",query)
+}
+
+
+
+//insert_in_db("products",products)
+//find_product_by_brand("dedicated")
+//find_product_lte(50)
+//find_product_sorted_by_price()
+//find_product_sorted_by_date()
+//find_product_lt_2_weeks()
