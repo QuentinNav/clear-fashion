@@ -70,8 +70,53 @@ async function find_product_lt_2_weeks(){
     ex_query("products",query)
 }
 
+let test=[]
 
 
+module.exports.find_product_id = async(id)=>{
+    const db=await Connect_db()
+    const products=db.collection("products")
+    const query ={"_id":id}
+    const result= await products.find(query).toArray()
+
+    console.log(result)
+    return result
+}
+
+module.exports.Search = async(request)=>{
+    const db=await Connect_db()
+    let products=db.collection("products")
+    let page=request.query.page
+    var brand= await products.distinct('brand')
+    let limit=12
+    let price=9999999
+
+    if("limit" in request.query)
+    {
+        limit =parseInt(request.query.limit)
+    }
+    if ("price" in request.query){
+
+        price=parseInt(request.query.price)
+    }
+
+    if ("brand" in request.query){
+        brand = [request.query.brand]
+
+    }
+    console.log("price",price)
+    let products_selected =await products.find({
+        $and:[{price:{$lt:price}},{brand : {$in:brand}}]
+    }).sort({price:1}).limit(limit).toArray();
+
+    return products_selected
+}
+
+
+function dict_by_brand(products,brand_name){
+    return products.filter(product =>(product.brand===brand_name));
+}
+//console.log(find_product_by_id("927f0704-41ab-5348-9076-94b118153baf"))
 //insert_in_db("products",products)
 //find_product_by_brand("dedicated")
 //find_product_lte(50)
