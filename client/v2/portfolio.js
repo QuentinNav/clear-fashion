@@ -85,18 +85,32 @@ const renderProducts = products => {
         if(favorites.includes(product.uuid))
         {
             str=`<div class="product" id="${product.uuid}">
-                 <button class="favorite" id="uuid${product.uuid}" type="button" value="uuid${product.uuid}">remove from favorites</button>
-                 <span>${product.brand}</span>
-                 <a href="${product.link}" target="_blank">${product.name}</a>
-                 <span>${product.price}</span>
+                 <div class="imgContainer">
+                    <img class="img" src="${product.photo}"/>
+                 </div>
+                 <div class="pContainer">
+                     <a class="p_name" href="${product.link}" target="_blank">${product.name}</a>
+                     <span class="p_brand">${product.brand}</span>
+                     <span class="p_price">${product.price} €</span>
+                </div>
+                <div class="favContainer">
+                     <button class="favorite" id="uuid${product.uuid}" type="button" value="uuid${product.uuid}">remove from favorites</button>
+                </div>
                  </div>`;
         }
         else{
             str=`<div class="product" id="${product.uuid}">
-                 <button class="favorite" id="uuid${product.uuid}" type="button" value="uuid${product.uuid}">add to favorites</button>
-                 <span>${product.brand}</span>
-                 <a href="${product.link}" target="_blank">${product.name}</a>
-                 <span>${product.price}</span>
+                 <div class="imgContainer">
+                    <img class="img" src="${product.photo}"/>
+                 </div>
+                 <div class="pContainer">
+                     <a class="p_name" href="${product.link}" target="_blank">${product.name}</a>
+                     <span class="p_brand">${product.brand}</span>
+                     <span class="p_price">${product.price} €</span>
+                </div>
+                <div class="favContainer">
+                     <button class="favorite" id="uuid${product.uuid}" type="button" value="uuid${product.uuid}">add to favorites</button>
+                </div>
                  </div>`;
         }
       console.log(str);
@@ -107,7 +121,7 @@ const renderProducts = products => {
 
   div.innerHTML = template;
   fragment.appendChild(div);
-  sectionProducts.innerHTML = '<h2>Products</h2>';
+  sectionProducts.innerHTML = '<h2 id="ProductTitle">Products</h2><hr><br><br><br><br>';
   sectionProducts.appendChild(fragment);
 };
 

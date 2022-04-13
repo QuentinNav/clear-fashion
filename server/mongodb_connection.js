@@ -86,11 +86,15 @@ module.exports.find_product_id = async(id)=>{
 module.exports.Search = async(request)=>{
     const db=await Connect_db()
     let products=db.collection("products")
-    let page=request.query.page
+
     var brand= await products.distinct('brand')
     let limit=12
     let price=9999999
-
+    let page=1
+    console.log(request.query)
+    if("size" in request.query){
+        limit=parseInt(request.query.size)
+    }
     if("limit" in request.query)
     {
         limit =parseInt(request.query.limit)
@@ -98,6 +102,10 @@ module.exports.Search = async(request)=>{
     if ("price" in request.query){
 
         price=parseInt(request.query.price)
+    }
+    if ("page" in request.query)
+    {
+        limit=parseInt(request.query.page)*limit
     }
 
     if ("brand" in request.query){

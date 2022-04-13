@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
+      <link rel="stylesheet" href="style.css">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>👕 Clear Fahion | Environmentally & human-friendly clothes</title>
   </head>
   <body>
-    <h1 >Clear fashion</h1>
+    <h1 id="title" >Clear fashion</h1 >
+
     <section id="options">
       <div id="show">
         <label for="show-select">Show:</label>
@@ -20,6 +22,7 @@
         <select name="page" id="page-select"> </select>
       </div>
       <div id="filters">
+          <label for="brand-select">Filters:</label>
         <button id="reasonable-price" type="button">By reasonable price</button>
         <button id="recently-released" type="button">By recently released</button>
         <button id="favorites" type="button">By favorites</button>
@@ -39,8 +42,9 @@
         </select>
       </div>
     </section>
+    <h2 id="indicator_title">Indicators</h2 >
     <section id="indicators">
-      <h2>Indicators</h2>
+
       <div>
         <span>Number of products</span>
         <span id="nbProducts">0</span>
